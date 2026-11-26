@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>hieu-tiktok-studio – Callback</title>
+</head>
+<body style="font-family:sans-serif;max-width:640px;margin:40px auto;padding:0 16px">
+<h1>hieu-tiktok-studio</h1>
+<p id="msg"></p>
+<textarea id="code" rows="5" style="width:100%" readonly hidden></textarea>
+<script>
+var p = new URLSearchParams(location.search);
+var code = p.get("code");
+var msg = document.getElementById("msg");
+var box = document.getElementById("code");
+if (code) {
+  msg.textContent = "Authorization code (dùng một lần, không chia sẻ):";
+  box.value = code;
+  box.hidden = false;
+  history.replaceState(null, "", location.pathname);
+} else {
+  msg.textContent = p.get("error_description") || p.get("error") || "Không có code.";
+}
+</script>
+</body>
+</html>
