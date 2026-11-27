@@ -1,28 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
+<!--
+  Trang chuyển tiếp OAuth cho AI Studio.
+  TikTok không nhận Redirect URI dạng localhost, nên đặt file này lên một trang HTTPS (vd. GitHub Pages),
+  khai URL của nó trong TikTok Login Kit (tab Web) và trong AI Studio → Cài đặt → TikTok → "Redirect URI tuỳ chỉnh".
+  Trang chỉ chuyển nguyên ?code=...&state=... về backend AI Studio chạy trên máy bạn; không lưu, không gửi đi đâu khác.
+-->
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="referrer" content="no-referrer">
-<title>hieu-tiktok-studio – Callback</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="no-referrer" />
+<title>AI Studio – đang chuyển về app</title>
+<style>
+  :root { --bg: #f7f8f2; --text: #1f2a16; --muted: #5d6b52; --accent: #568203; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #151a10; --text: #e8eedf; --muted: #a3b094; --accent: #9ccc4a; } }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; padding: 16px; box-sizing: border-box; }
+  main { max-width: 440px; text-align: center; }
+  a { color: var(--accent); overflow-wrap: anywhere; }
+  p { color: var(--muted); }
+</style>
 </head>
-<body style="font-family:sans-serif;max-width:640px;margin:40px auto;padding:0 16px">
-<h1>hieu-tiktok-studio</h1>
-<p id="msg"></p>
-<textarea id="code" rows="5" style="width:100%" readonly hidden></textarea>
+<body>
+<main>
+  <h2>Đang chuyển về AI Studio…</h2>
+  <p id="msg">Nếu không tự chuyển, hãy chắc chắn AI Studio đang chạy trên máy này rồi bấm vào link bên dưới.</p>
+  <p><a id="go" href="#">Mở lại AI Studio</a></p>
+</main>
 <script>
-var p = new URLSearchParams(location.search);
-var code = p.get("code");
-var msg = document.getElementById("msg");
-var box = document.getElementById("code");
-if (code) {
-  msg.textContent = "Authorization code (dùng một lần, không chia sẻ):";
-  box.value = code;
-  box.hidden = false;
-  history.replaceState(null, "", location.pathname);
-} else {
-  msg.textContent = p.get("error_description") || p.get("error") || "Không có code.";
-}
+  // Backend AI Studio trên máy người dùng. Đổi "tiktok" nếu dùng trang này cho nền tảng khác.
+  var TARGET = "http://localhost:8001/api/publish/oauth/tiktok/callback";
+  var url = TARGET + window.location.search;
+  document.getElementById("go").href = url;
+  if (window.location.search) window.location.replace(url);
+  else document.getElementById("msg").textContent = "Trang này chỉ dùng để nhận kết quả đăng nhập TikTok cho AI Studio.";
 </script>
 </body>
 </html>
